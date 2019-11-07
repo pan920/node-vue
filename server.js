@@ -38,7 +38,7 @@ app.listen(port,() => {
     console.log(`server running on port ${port}`)
 })
 
-
+// 忽略
 
 // npm install nodemon -g 全局安装nodemon 自动更新，不用重启node服务
 // npm install jsonwebtoken 安装jwt设置token验证
