@@ -3,6 +3,13 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const Profiles = require("../../models/Profiles")
+
+// 
+// app.all('*', (req, res) => {
+//     res.header("Access-Control-Allow-Origin", "*")
+//     req.method == "OPTIONS" ? res.sned(200) : next()
+// })
+
 // $route GET api/profiles/test
 //  @desc 返回得请求得json数据
 // @access public
@@ -91,16 +98,17 @@ router.get("/:id",passport.authenticate('jwt',{session: false}),(req,res) => {
 //  @access Private
 router.post("/edit/:id",passport.authenticate('jwt',{session: false}),(req,res) => {
     const profileFields = {};
+    console.log(req.body)
     if (req.body.type) profileFields.type = req.body.type;
     if (req.body.describe) profileFields.describe = req.body.describe;
     if (req.body.income) profileFields.income = req.body.income;
     if (req.body.expend) profileFields.expend = req.body.expend;
     if (req.body.cash) profileFields.cash = req.body.cash;
     if (req.body.remark) profileFields.remark = req.body.remark;
-
-    Profiles.findOneAndUpdate({_id: req.params.id})
+    console.log(profileFields)
+    Profiles.findOneAndUpdate({_id: req.params.id},{$set:profileFields})
             .then(profiles => {
-                res.json(profiles)
+                res.json('更新成功！')
             })
     
 })

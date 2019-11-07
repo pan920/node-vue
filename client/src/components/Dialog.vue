@@ -19,7 +19,7 @@
                         <el-input type='describe' v-model="formData.describe"></el-input>
                     </el-form-item>
                     <el-form-item prop="incode" label="收入:">
-                        <el-input type='incode' v-model="formData.incode"></el-input>
+                        <el-input type='incode' v-model="formData.income"></el-input>
                     </el-form-item>
                     <el-form-item prop="expend" label="支出:">
                         <el-input type='expend' v-model="formData.expend"></el-input>
@@ -60,7 +60,7 @@ export default {
                 describe:[
                     {required:true,message:'收支描述不能为空!',trigger:'blur'}
                 ],
-                incode:[
+                income:[
                     {required:true,message:'收入不能为空!',trigger:'blur'}
                 ],
                 expend:[
@@ -77,7 +77,7 @@ export default {
             this.$refs[form].validate(valid=>{
                 if(valid){
                     const url = this.dialog.option == 'add'? 'add' : `edit/${this.formData.id}`
-                    this.$http.post(`/api/profiles/${url}`,this.formData)
+                    this.$axios.post(`/api/profiles/${url}`,this.formData)
                     .then(res=>{
                         this.$message({
                             message:'数据添加成功',

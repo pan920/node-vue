@@ -219,15 +219,15 @@ export default {
             }
         },
         handleDelete(index,row){
-            this.$axios.delete(`/api/profiles/delete/${row._id}`).then(res=>{
+            this.$axios.delete(`/api/profiles/del/${row._id}`).then(res=>{
                 this.$message('删除成功')
                 this.getProfile()
             })
         },
         setPaginations(total_num){
             this.paginations.total = total_num
-            this.paginations.page_index = 1
-            this.paginations.page_size = 5
+            this.paginations.page_index = this.paginations.page_index==1 ? 1 : this.paginations.page_index
+            this.paginations.page_size = this.paginations.page_size ==5 ? 5 : this.paginations.page_size
             //设置默认分页数据
             this.tableData = this.allTableData.filter((item,index)=>{
                 return index < this.paginations.page_size
@@ -236,13 +236,17 @@ export default {
         handleSizeChange(page_size){
             this.paginations.page_index = 1
             this.paginations.page_size = page_size
-            this.tableData = this.allTableData.filter((item,index)=>{
-                return index < page_size
-            })
+            this.getProfile()
+            // console.log("handleSizeChange")
+            // this.tableData = this.allTableData.filter((item,index)=>{
+            //     return index < page_size
+            // })
         },
         handleCurrentChange(page){
             //获取当前页
+            this.paginations.page_index = page
             let index = this.paginations.page_size * (page-1)
+            // console.log(this.paginations)
             //数据总数
             // let nums = this.paginations.page_size * page
             // let tables = []
