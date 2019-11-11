@@ -10,7 +10,9 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitLogin('loginUser')">登陆</el-button>
-        <el-button type="success">注册</el-button>
+        <div class="tiparea">
+            <p>还没有账号？现在<router-link to='/register'>注册</router-link> </p>
+        </div>
       </el-form-item>
     </el-form>
   </div>
@@ -89,6 +91,14 @@ export default {
   font-size: 24px;
   margin-bottom: 20px;
   font-weight: 600;
+}
+.tiparea {
+  text-align: right;
+  font-size: 12px;
+  color: #333;
+}
+.tiparea p a {
+  color: #409eff;
 }
 </style>
 

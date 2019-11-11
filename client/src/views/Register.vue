@@ -16,7 +16,6 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitRegister('registerUser')">注册</el-button>
-        <el-button type="success">登陆</el-button>
       </el-form-item>
     </el-form>
   </div>
