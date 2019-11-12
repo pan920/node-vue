@@ -3,7 +3,9 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const Profiles = require("../../models/Profiles")
+const jwt_decode = require("jwt-decode");
 
+//
 // 
 // app.all('*', (req, res) => {
 //     res.header("Access-Control-Allow-Origin", "*")
@@ -35,7 +37,8 @@ router.post("/add",passport.authenticate('jwt',{session: false}),(req,res) => {
     if (req.body.expend) profileFields.expend = req.body.expend;
     if (req.body.cash) profileFields.cash = req.body.cash;
     if (req.body.remark) profileFields.remark = req.body.remark;
-
+    const decoded = jwt_decode(req.headers.authorization)
+    profileFields.userId = decoded.id;
     new Profiles(profileFields).save().then(profile => {
         res.json(profile)
     })
@@ -45,13 +48,24 @@ router.post("/add",passport.authenticate('jwt',{session: false}),(req,res) => {
 //  @desc 列表接口
 //  @access Private 
 router.get("/list",passport.authenticate('jwt',{session: false}),(req,res) => {
+    const decoded = jwt_decode(req.headers.authorization)
+    // console.log(decoded)
+    // console.log(decoded.identity)
     Profiles.find()
             .then(profiles => {
                 if (!profiles) {
                     res.status(404).json("没有任何内容！")
                 }
                 // return res.json(profiles)
-                Profiles.paginate({}, {
+                // 此处增加判断，将用户与数据对应，最高权限者可以查看所有数据
+                const userId = {}
+                if (decoded.identity == 'admin'){
+                    userId.userId = undefined
+                }else{
+                    userId.userId = decoded.id
+                }
+                
+                Profiles.paginate(userId, {
                         page: req.query.page,
                         limit: req.query.limit
                     },
@@ -60,6 +74,7 @@ router.get("/list",passport.authenticate('jwt',{session: false}),(req,res) => {
                             res.end("列表接口报错！");
                             return;
                         }
+                       
                         res.send({
                             page_count: result.limit,
                             page_num: result.page,

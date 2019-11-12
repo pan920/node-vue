@@ -41,7 +41,7 @@ export default {
         email: '',
         password: '',
         password2: '',
-        identity: 'admin'
+        identity: 'user'
       },
       loading: false,
       fullscreenLoading: false,

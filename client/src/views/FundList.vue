@@ -94,7 +94,7 @@
                 align='center'
                 width="220">
                 </el-table-column>
-                <el-table-column label="操作" v-if="user.identity == 'admin'" prop="operation" fixed="right" align="center" width="320">
+                <el-table-column label="操作" v-if="user.identity == 'admin' || user.identity == 'user'" prop="operation" fixed="right" align="center" width="320">
                     <template slot-scope="scope">
                         <el-button
                         type='warning'
