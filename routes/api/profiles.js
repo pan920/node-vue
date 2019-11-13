@@ -59,10 +59,8 @@ router.get("/list",passport.authenticate('jwt',{session: false}),(req,res) => {
                 // return res.json(profiles)
                 // 此处增加判断，将用户与数据对应，最高权限者可以查看所有数据
                 const userId = {}
-                if (decoded.identity == 'admin'){
-                    userId.userId = undefined
-                }else{
-                    userId.userId = decoded.id
+                if (decoded.identity != 'admin'){
+                     userId.userId = decoded.id
                 }
                 
                 Profiles.paginate(userId, {
