@@ -9,6 +9,7 @@
     "client": "npm run start --prefix client",
     "start": "node server.js",
     "server": "nodemon server.js",
+    "prd": "pm2 start server.js --name='node-vue'",
     "dev": "concurrently \"npm run server\" \"npm run client\" "
   },
   "author": "pan",
