@@ -32,9 +32,16 @@ axios.interceptors.request.use(config => {
 
 // 响应拦截
 axios.interceptors.response.use(response => {
-    // 结束加载动画
-    endLoading();
-    return response;
+        // 结束加载动画
+        endLoading();
+        // console.log('code:'+response.data.code)
+        // if (response.data.code !== 200 && response.data.code != 'undefind') {
+        //     Message.error(response.data.message);
+        //     return
+        // }else{
+            return response
+            // return Promise.reject(response)
+        // }
     },error => {
         // 错误提醒
         endLoading();

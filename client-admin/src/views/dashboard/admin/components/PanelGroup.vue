@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            New Visits
+            用户总数
           </div>
           <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
         </div>
@@ -20,7 +20,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Messages
+            列表条数
           </div>
           <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
         </div>
@@ -33,7 +33,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Purchases
+            资金总数
           </div>
           <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
         </div>
@@ -46,7 +46,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Shoppings
+            统计
           </div>
           <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
         </div>
@@ -57,14 +57,29 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import { getNumApi } from '@/api/user'
 
 export default {
   components: {
     CountTo
   },
+  data() {
+    return {
+      numArr: []
+    }
+  },
+  created() {
+    this.getNum()
+  },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    // 统计数据
+    async getNum() {
+      const res = await getNumApi()
+      console.log(res)
+      this.numArr = res.data
     }
   }
 }

@@ -72,7 +72,7 @@ export default {
           }
           ],
         password2: [
-          {required:true,message:"请输入用户名",trigger:'blur'},
+          {required:true,message:"请输入密码",trigger:'blur'},
           {validator:validatePass2,trigger:'blur'}
           ]
       }

@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       loginUser: {
-        email: '',
+        email: '3@qq.com',
         password: ''
       },
       rules: {
@@ -47,7 +47,7 @@ export default {
           if (valid) {
             this.$axios.post('/api/users/login',this.loginUser)
             .then(res => {
-              console.log(res)
+              // console.log(res.data)
               const {token} = res.data
               // console.log(token)
               // 存储token
@@ -58,9 +58,10 @@ export default {
               // 存储到vuex中
               this.$store.dispatch("setAuthenticated",!this.isEmpty(decoded))
               this.$store.dispatch("setUser",decoded)
+              // 登陆跳转
+              this.$router.push('/')
             })
-            // 登陆跳转
-            this.$router.push('/')
+            
           }
          
         });

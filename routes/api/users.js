@@ -8,7 +8,7 @@ const app = express()
 const passport = require("passport");
 
 const User = require("../../models/User")
-
+const Profiles = require("../../models/Profiles")
 app.all('*', (req, res) => {
     res.header("Access-Control-Allow-Origin","*")
     req.method == "OPTIONS" ? res.sned(200) :next()
@@ -86,6 +86,10 @@ router.post("/login",(req,res) =>{
                         })
                       }else{
                           return res.status(400).json("密码错误！")
+                        //   return res.json({
+                        //     code: 400,
+                        //     message:"密码错误！"
+                        //   })
                       }
                   })
         })
@@ -104,5 +108,30 @@ router.get("/current", passport.authenticate("jwt",{session:false}), (req, res) 
     })
 })
 
+// 数据统计模块
+// $route GET api/users/getNum
+// @desc return 数据统计
+// @access Private
+router.get("/getNum", passport.authenticate("jwt",{session:false}), (req, res) => {
+    // 用户总数
+    User.count()
+        .then(user => {
+        // 列表条数
+        Profiles.count()
+                .then(files => {
+                return res.json({
+                    userNum: user,
+                    filesNum: files
+                })
+            })
+    })
+    
+   
+})
+
+// 特殊查询
+router.get("/diff",passport.authenticate("jwt",{session:false}),(req,res) => {
+    
+})
 
 module.exports = router;

@@ -2,9 +2,17 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/user/login',
+    url: '/users/login',
     method: 'post',
     data
+  })
+}
+
+// 获取统计数据
+export function getNumApi() {
+  return request({
+    url: '/users/getNum',
+    method: 'get'
   })
 }
 
