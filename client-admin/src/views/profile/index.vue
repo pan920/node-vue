@@ -13,9 +13,9 @@
               <el-tab-pane label="Activity" name="activity">
                 <activity />
               </el-tab-pane>
-              <el-tab-pane label="Timeline" name="timeline">
+              <!-- <el-tab-pane label="Timeline" name="timeline">
                 <timeline />
-              </el-tab-pane>
+              </el-tab-pane> -->
               <el-tab-pane label="Account" name="account">
                 <account :user="user" />
               </el-tab-pane>
@@ -32,12 +32,12 @@
 import { mapGetters } from 'vuex'
 import UserCard from './components/UserCard'
 import Activity from './components/Activity'
-import Timeline from './components/Timeline'
+// import Timeline from './components/Timeline'
 import Account from './components/Account'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
+  components: { UserCard, Activity, Account },
   data() {
     return {
       user: {},

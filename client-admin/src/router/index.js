@@ -56,6 +56,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/register',
+    component: () => import('@/views/register/index'),
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -93,7 +98,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        meta: { title: '个人中心', icon: 'user', noCache: true }
       }
     ]
   }
@@ -159,6 +164,18 @@ export const asyncRoutes = [
     ]
   },
 
+  {
+    path: '/found',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/found/list'),
+        name: 'Found',
+        meta: { title: '资金管理', icon: 'money' }
+      }
+    ]
+  },
   /** 当路由图太长时，可以将其拆分为小模块。 **/
 
   // 404 page must be placed at the end !!!
@@ -166,7 +183,7 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

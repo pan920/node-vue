@@ -9,7 +9,7 @@
           <div class="card-panel-text">
             用户总数
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="numArr.userNum" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -22,7 +22,7 @@
           <div class="card-panel-text">
             列表条数
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="numArr.filesNum" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -46,7 +46,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            统计
+            花销统计
           </div>
           <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
         </div>
@@ -78,8 +78,9 @@ export default {
     // 统计数据
     async getNum() {
       const res = await getNumApi()
-      console.log(res)
-      this.numArr = res.data
+      // console.log(res)
+      this.numArr = res
+      // console.log(this.numArr)
     }
   }
 }

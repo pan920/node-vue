@@ -30,3 +30,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function registerApi(data) {
+  return request({
+    url: '/users/register',
+    method: 'post',
+    data
+  })
+}

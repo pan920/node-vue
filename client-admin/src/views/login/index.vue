@@ -51,6 +51,9 @@
         <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
           三方登陆
         </el-button>
+        <div class="tiparea">
+          <p>还没有账号？现在<router-link to="/register">注册</router-link> </p>
+        </div>
       </div>
     </el-form>
 
@@ -244,7 +247,15 @@ $cursor: #fff;
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
-
+.tiparea {
+  text-align: left;
+  font-size: 12px;
+  color: #fff;
+  margin-top:20px;
+}
+.tiparea p a {
+  color: #409eff;
+}
 .login-container {
   min-height: 100%;
   width: 100%;

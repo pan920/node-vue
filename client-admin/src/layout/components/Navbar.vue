@@ -30,7 +30,7 @@
           <router-link to="/">
             <el-dropdown-item>首页</el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
+          <a target="_blank" href="https://github.com/pan920/node-vue">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
           <el-dropdown-item divided>
