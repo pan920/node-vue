@@ -18,13 +18,17 @@ const ArticleSchema = new Schema({
         type: String,
         required: true
     },
-     exam: {
+     status: {
          type: Boolean,
          required: true
      },
     date: {
         type: Date,
         default: Date.now
+    },
+    Author: {
+        type: String,
+        required: true
     },
     userId: {
         type: String,

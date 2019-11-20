@@ -22,9 +22,10 @@ router.post("/add",passport.authenticate('jwt',{session: false}),(req,res) => {
     if (req.body.title) articleFields.title = req.body.title;
     if (req.body.describe) articleFields.describe = req.body.describe;
     if (req.body.content) articleFields.content = req.body.content;
-    if (req.body.exam) articleFields.exam = req.body.exam;
+    if (req.body.status) articleFields.status = req.body.status;
     const decoded = jwt_decode(req.headers.authorization)
     articleFields.userId = decoded.id;
+    articleFields.name = decoded.name;
     new Article(articleFields).save().then(article => {
         res.json(article)
     })
@@ -78,7 +79,7 @@ router.post("/edit/:id",passport.authenticate('jwt',{session: false}),(req,res) 
     if (req.body.title) articleFields.title = req.body.title;
     if (req.body.describe) articleFields.describe = req.body.describe;
     if (req.body.content) articleFields.content = req.body.content;
-    if (req.body.exam) articleFields.exam = req.body.exam;
+    if (req.body.status) articleFields.status = req.body.status;
     Article.findOneAndUpdate({_id: req.params.id},{$set:articleFields})
             .then(article => {
                 res.json('更新成功！')

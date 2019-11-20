@@ -1,33 +1,28 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+// 新闻列表
+export function articleListApi(data) {
   return request({
     url: '/article/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data
   })
 }
 
-export function fetchArticle(id) {
+// 新增新闻
+export function addArticleApi(data) {
   return request({
     url: '/article/detail',
-    method: 'get',
-    params: { id }
-  })
-}
-
-export function fetchPv(pv) {
-  return request({
-    url: '/article/pv',
-    method: 'get',
-    params: { pv }
-  })
-}
-
-export function createArticle(data) {
-  return request({
-    url: '/article/create',
     method: 'post',
+    data
+  })
+}
+
+// 编辑新闻
+export function editArticleApi(data, id) {
+  return request({
+    url: `/article/edit/${id}`,
+    method: 'get',
     data
   })
 }
