@@ -10,6 +10,7 @@ app.use(expressPaginate.middleware(10, 50));
 // 使用users
 const users = require("./routes/api/users")
 const profiles = require("./routes/api/profiles")
+const article = require("./routes/api/article")
 
 // 使用body-parder 中间件
 app.use(bodyParser.urlencoded({extends:false}));
@@ -33,6 +34,7 @@ app.get("/",(req,res)=>{
 // 使用routes 
 app.use("/api/users",users);
 app.use("/api/profiles", profiles);
+app.use("/api/article", article);
 const port = process.env.PORT || 5000;
 app.listen(port,() => {
     console.log(`server running on port ${port}`)
