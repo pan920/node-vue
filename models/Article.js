@@ -26,7 +26,7 @@ const ArticleSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    Author: {
+    author: {
         type: String,
         required: true
     },

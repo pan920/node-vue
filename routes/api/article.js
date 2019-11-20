@@ -25,7 +25,7 @@ router.post("/add",passport.authenticate('jwt',{session: false}),(req,res) => {
     if (req.body.status) articleFields.status = req.body.status;
     const decoded = jwt_decode(req.headers.authorization)
     articleFields.userId = decoded.id;
-    articleFields.name = decoded.name;
+    articleFields.author = decoded.name;
     new Article(articleFields).save().then(article => {
         res.json(article)
     })
