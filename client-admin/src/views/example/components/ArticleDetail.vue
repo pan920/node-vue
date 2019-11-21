@@ -71,7 +71,6 @@ import { searchUser } from '@/api/remote-search'
 import Warning from './Warning'
 
 const defaultForm = {
-  status: 'draft',
   title: '', // 文章题目
   content: '', // 文章内容
   describe: '', // 文章摘要
@@ -206,7 +205,9 @@ export default {
                 duration: 2000
               })
               this.loading = false
-              // this.$route.push(/example/list)
+              this.$router.push({  // 核心语句
+                path:'/example/list',   // 跳转的路径
+              })
           })
          
         } else {

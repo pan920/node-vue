@@ -5,7 +5,7 @@
       <el-button v-waves class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="searchList()">
         查询
       </el-button>
-      <el-button class="filter-item" size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addFollow()">
+      <el-button class="filter-item" size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addArticle()">
         新增文章
       </el-button>
       <el-button class="filter-item" type="primary" size="mini" icon="el-icon-view" @click="showWord()">
@@ -30,12 +30,21 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="发布时间">
+      <el-table-column width="180px" align="center" label="添加时间">
         <template slot-scope="scope">
           <span>{{ scope.row.date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column width="180px" align="center" label="发布时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.publish_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="是否置顶">
+        <template slot-scope="scope">
+          <span v-if="scope.row.is_top = true?'是':'否'">{{ scope.row.is_top }}</span>
+        </template>
+      </el-table-column>
       <el-table-column width="100px" align="center" label="文章分类">
         <template slot-scope="scope">
           <span>{{ scope.row.type }}</span>
@@ -84,6 +93,7 @@
 
 <script>
 import { articleListApi } from '@/api/article'
+import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -120,6 +130,11 @@ export default {
         this.list = res.result.docs
         this.total = res.total_num
         this.listLoading = false
+      })
+    },
+    addArticle() {
+      this.$router.push({  // 核心语句
+        path:'/example/create',   // 跳转的路径
       })
     }
   }

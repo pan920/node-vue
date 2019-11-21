@@ -19,7 +19,7 @@ const ArticleSchema = new Schema({
         required: true
     },
      status: {
-         type: Boolean,
+         type: String,
          required: true
      },
     is_top: {
