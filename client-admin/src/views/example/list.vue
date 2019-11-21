@@ -1,5 +1,20 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-input v-model="listQuery.title" size="mini" placeholder="请输入标题" style="width: 130px;" class="filter-item" />
+      <el-button v-waves class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="searchList()">
+        查询
+      </el-button>
+      <el-button class="filter-item" size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addFollow()">
+        新增文章
+      </el-button>
+      <el-button class="filter-item" type="primary" size="mini" icon="el-icon-view" @click="showWord()">
+        显示字段
+      </el-button>
+      <!-- <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download">
+        {{ $t('table.export') }}
+      </el-button> -->
+    </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID">
         <template slot-scope="scope">
@@ -9,7 +24,7 @@
 
       <el-table-column min-width="80px" align="center" label="文章标题">
         <template slot-scope="{row}">
-          <router-link :to="'/example/edit/'+row.id" class="link-type">
+          <router-link :to="'/example/edit/'+row._id" class="link-type">
             <span>{{ row.title }}</span>
           </router-link>
         </template>
@@ -39,17 +54,22 @@
         </template>
       </el-table-column> -->
 
-      <!-- <el-table-column class-name="status-col" label="审核状态" width="110">
+      <el-table-column class-name="status-col" label="审核状态" width="110">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
+            <span v-if="row.status = true">
+              审核通过
+            </span>
+            <span v-else>
+              未审核
+            </span>
           </el-tag>
         </template>
-      </el-table-column> -->
+      </el-table-column>
 
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <router-link :to="'/example/edit/'+scope.row.id">
+          <router-link :to="'/example/edit/'+scope.row._id">
             <el-button type="primary" size="small" icon="el-icon-edit">
               编辑
             </el-button>

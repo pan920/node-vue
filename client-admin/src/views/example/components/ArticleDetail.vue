@@ -10,30 +10,52 @@
                 标题
               </MDinput>
             </el-form-item>
-
-            <div class="postInfo-container">
-              <el-row>
-
-                <el-col :span="10">
-                  <el-form-item label-width="120px" label="发布时间:" class="postInfo-container-item">
-                    <el-date-picker v-model="displayTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="Select date and time" />
-                  </el-form-item>
-                </el-col>
-
-              </el-row>
-            </div>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="发布时间:" class="postInfo-container-item" prop="publish_time">
+              <el-date-picker v-model="postForm.publish_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择时间" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label-width="80px" label="审核状态:" class="postInfo-container-item" prop="status">
+              <el-select v-model="postForm.status" placeholder="请选择审核状态">
+                  <el-option label="未审核" value="0"></el-option>
+                  <el-option label="已审核" value="1"></el-option>
+                  <el-option label="未通过" value="2"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label-width="80px" label="文章分类:" class="postInfo-container-item" prop="type">
+              <el-select v-model="postForm.type" placeholder="请选择文章分类">
+                  <el-option label="vue" value="vue"></el-option>
+                  <el-option label="node" value="node"></el-option>
+                  <el-option label="mongose" value="mongose"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label-width="80px" label="是否置顶:" class="postInfo-container-item" prop="is_top">
+              <el-select v-model="postForm.is_top" placeholder="是否置顶">
+                  <el-option label="是" value="true"></el-option>
+                  <el-option label="否" value="false"></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
-
+        
         <el-form-item style="margin-bottom: 40px;" label-width="70px" label="描述:">
-          <el-input v-model="postForm.content_short" :rows="1" type="textarea" class="article-textarea" autosize placeholder="Please enter the content" />
-          <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span>
+          <el-input v-model="postForm.describe" :rows="1" type="textarea" class="article-textarea" autosize placeholder="描述" />
+          <!-- <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span> -->
         </el-form-item>
 
         <el-form-item prop="content" style="margin-bottom: 30px;">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
       </div>
+      <el-form-item style="margin-left:50px;">
+        <el-button type="primary" @click="addArticle('postForm')">立即提交</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -44,28 +66,29 @@ import Upload from '@/components/Upload/SingleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
+import { addArticleApi } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
 import Warning from './Warning'
-import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 
 const defaultForm = {
   status: 'draft',
   title: '', // 文章题目
   content: '', // 文章内容
-  content_short: '', // 文章摘要
+  describe: '', // 文章摘要
   source_uri: '', // 文章外链
   image_uri: '', // 文章图片
   display_time: undefined, // 前台展示时间
   id: undefined,
-  platforms: ['a-platform'],
   comment_disabled: false,
-  importance: 0
+  publish_time: '',
+  type: '', // 文章分类
+  status: '', // 审核状态
+  is_top: '' // 是否置顶
 }
 
 export default {
   name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown },
+  components: { Tinymce, MDinput, Upload, Sticky, Warning },
   props: {
     isEdit: {
       type: Boolean,
@@ -169,19 +192,23 @@ export default {
       const title = 'Edit Article'
       document.title = `${title} - ${this.postForm.id}`
     },
-    submitForm() {
+    // 添加文章
+    addArticle() {
       console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$notify({
-            title: '成功',
-            message: '发布文章成功',
-            type: 'success',
-            duration: 2000
+          addArticleApi(this.postForm).then((res) => {
+               this.$notify({
+                title: '成功',
+                message: '发布文章成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.loading = false
+              // this.$route.push(/example/list)
           })
-          this.postForm.status = 'published'
-          this.loading = false
+         
         } else {
           console.log('error submit!!')
           return false

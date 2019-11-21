@@ -23,6 +23,8 @@ router.post("/add",passport.authenticate('jwt',{session: false}),(req,res) => {
     if (req.body.describe) articleFields.describe = req.body.describe;
     if (req.body.content) articleFields.content = req.body.content;
     if (req.body.status) articleFields.status = req.body.status;
+    if (req.body.is_top) articleFields.is_top = req.body.is_top;
+    if (req.body.publish_time) articleFields.publish_time = req.body.publish_time;
     const decoded = jwt_decode(req.headers.authorization)
     articleFields.userId = decoded.id;
     articleFields.author = decoded.name;
@@ -80,6 +82,8 @@ router.post("/edit/:id",passport.authenticate('jwt',{session: false}),(req,res) 
     if (req.body.describe) articleFields.describe = req.body.describe;
     if (req.body.content) articleFields.content = req.body.content;
     if (req.body.status) articleFields.status = req.body.status;
+    if (req.body.is_top) articleFields.is_top = req.body.is_top;
+    if (req.body.publish_time) articleFields.publish_time = req.body.publish_time;
     Article.findOneAndUpdate({_id: req.params.id},{$set:articleFields})
             .then(article => {
                 res.json('更新成功！')

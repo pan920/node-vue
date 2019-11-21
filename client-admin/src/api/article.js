@@ -12,7 +12,7 @@ export function articleListApi(data) {
 // 新增新闻
 export function addArticleApi(data) {
   return request({
-    url: '/article/detail',
+    url: '/article/add',
     method: 'post',
     data
   })

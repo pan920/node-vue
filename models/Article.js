@@ -22,6 +22,14 @@ const ArticleSchema = new Schema({
          type: Boolean,
          required: true
      },
+    is_top: {
+        type: Boolean,
+        required: true
+    },
+    publish_time: {
+        type: Date,
+        required: true
+    },
     date: {
         type: Date,
         default: Date.now
