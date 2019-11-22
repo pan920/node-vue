@@ -72,7 +72,7 @@ router.post("/list",passport.authenticate('jwt',{session:false}),(req,res) => {
                 console.log(err)
            })
 })
-// $route POST api/profiles/edit/:id
+// $route POST api/article/edit/:id
 //  @desc 编辑信息接口
 //  @access Private
 router.post("/edit/:id",passport.authenticate('jwt',{session: false}),(req,res) => {
@@ -91,5 +91,24 @@ router.post("/edit/:id",passport.authenticate('jwt',{session: false}),(req,res) 
     
 })
 
+// $route GET api/article/:id
+//  @desc  数据详情接口
+//  @access Private 
+router.get("/:id", passport.authenticate('jwt', {
+    session: false
+}), (req, res) => {
+    Article.findOne({
+            _id: req.params.id
+        })
+        .then(article => {
+            if (!article) {
+                res.status(404).json("没有任何内容！")
+            }
+            return res.json(article)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
 
 module.exports = router;

@@ -66,7 +66,7 @@ import Upload from '@/components/Upload/SingleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
-import { addArticleApi } from '@/api/article'
+import { addArticleApi, editArticleApi } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
 import Warning from './Warning'
 
@@ -154,6 +154,7 @@ export default {
   created() {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
+      console.log(id)
       this.fetchData(id)
     } else {
       this.postForm = Object.assign({}, defaultForm)
@@ -166,7 +167,7 @@ export default {
   },
   methods: {
     fetchData(id) {
-      fetchArticle(id).then(response => {
+      editArticleApi(this.postForm, id).then(response => {
         this.postForm = response.data
 
         // just for test

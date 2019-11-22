@@ -193,10 +193,10 @@ export const asyncRoutes = [
         meta: { title: '新增文章', icon: 'edit' }
       },
       {
-        path: 'edit/:id(\\d+)',
+        path: 'edit/:id',
         component: () => import('@/views/example/edit'),
         name: 'EditArticle',
-        meta: { title: 'editArticle', noCache: true, activeMenu: '/example/list' },
+        meta: { title: '编辑文章', noCache: true, activeMenu: '/example/list' },
         hidden: true
       },
       {
