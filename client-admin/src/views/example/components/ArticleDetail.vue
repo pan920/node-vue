@@ -37,8 +37,8 @@
           <el-col :span="5">
             <el-form-item label-width="80px" label="是否置顶:" class="postInfo-container-item" prop="is_top">
               <el-select v-model="postForm.is_top" placeholder="是否置顶">
-                  <el-option label="是" value="true"></el-option>
-                  <el-option label="否" value="false"></el-option>
+                  <el-option label="是" value="1"></el-option>
+                  <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -54,7 +54,8 @@
         </el-form-item>
       </div>
       <el-form-item style="margin-left:50px;">
-        <el-button type="primary" @click="addArticle('postForm')">立即提交</el-button>
+        <el-button v-if="isEdit" type="primary" @click="editArticle('postForm')">立即提交</el-button>
+        <el-button v-else type="primary" @click="addArticle('postForm')">立即提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -66,7 +67,7 @@ import Upload from '@/components/Upload/SingleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
-import { addArticleApi, editArticleApi } from '@/api/article'
+import { addArticleApi, editArticleApi, detailArticleApi } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
 import Warning from './Warning'
 
@@ -82,7 +83,7 @@ const defaultForm = {
   publish_time: '',
   type: '', // 文章分类
   status: '', // 审核状态
-  is_top: '' // 是否置顶
+  is_top: '0' // 是否置顶
 }
 
 export default {
@@ -154,7 +155,7 @@ export default {
   created() {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
-      console.log(id)
+      // console.log(id)
       this.fetchData(id)
     } else {
       this.postForm = Object.assign({}, defaultForm)
@@ -167,12 +168,9 @@ export default {
   },
   methods: {
     fetchData(id) {
-      editArticleApi(this.postForm, id).then(response => {
-        this.postForm = response.data
-
-        // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
+      detailArticleApi(id).then(response => {
+        // console.log(response)
+        this.postForm = response
 
         // set tagsview title
         this.setTagsViewTitle()
@@ -184,17 +182,16 @@ export default {
       })
     },
     setTagsViewTitle() {
-      const title = 'Edit Article'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
+      const title = '编辑文章'
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.title}` })
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     setPageTitle() {
-      const title = 'Edit Article'
-      document.title = `${title} - ${this.postForm.id}`
+      const title = '编辑文章'
+      document.title = `${title} - ${this.postForm.title}`
     },
     // 添加文章
     addArticle() {
-      console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -206,8 +203,31 @@ export default {
                 duration: 2000
               })
               this.loading = false
-              this.$router.push({  // 核心语句
-                path:'/example/list',   // 跳转的路径
+              this.$router.push({ // 核心语句
+                path:'/example/list' // 跳转的路径
+              })
+          })
+         
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    editArticle() {
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          editArticleApi(this.postForm).then((res) => {
+               this.$notify({
+                title: '成功',
+                message: '更新文章成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.loading = false
+              this.$router.push({ // 核心语句
+                path:'/example/list' // 跳转的路径
               })
           })
          

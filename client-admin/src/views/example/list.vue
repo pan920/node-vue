@@ -25,7 +25,7 @@
 
       <el-table-column min-width="80px" align="center" label="文章标题">
         <template slot-scope="scope">
-          <router-link :to="'/example/edit/5dd628c779fea3055672f64a'" class="link-type">
+          <router-link :to="'/example/edit/'+scope.row._id" class="link-type">
             <span>{{ scope.row.title }}</span>
           </router-link>
         </template>
@@ -44,7 +44,7 @@
       <el-table-column align="center" label="是否置顶">
         <template slot-scope="scope">
           <!-- <span v-if="scope.row.is_top === true?'是':'否'"></span> -->
-          <span v-if="scope.row.is_top">是</span>
+          <span v-if="scope.row.is_top == 1">是</span>
           <span v-else>否</span>
         </template>
       </el-table-column>
@@ -82,7 +82,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column fixed="right" align="center" label="操作" width="120">
         <template slot-scope="scope">
           <router-link :to="'/example/edit/'+scope.row._id">
             <el-button type="primary" size="small" icon="el-icon-edit">

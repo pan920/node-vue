@@ -97,7 +97,7 @@
           align="center"
           width="220"
         />
-        <el-table-column label="操作" prop="operation" fixed="right" align="center" width="320">
+        <el-table-column label="操作" prop="operation" fixed="right" align="center" width="200">
           <template slot-scope="scope">
             <el-button
               type="warning"

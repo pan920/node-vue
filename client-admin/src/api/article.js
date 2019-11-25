@@ -19,11 +19,19 @@ export function addArticleApi(data) {
 }
 
 // 编辑新闻
-export function editArticleApi(data, id) {
+export function editArticleApi(data) {
   return request({
-    url: `/article/edit/${id}`,
-    method: 'get',
+    url: `/article/edit/${data._id}`,
+    method: 'post',
     data
+  })
+}
+
+// 新闻详情
+export function detailArticleApi(id) {
+  return request({
+    url: `/article/${id}`,
+    method: 'get'
   })
 }
 
