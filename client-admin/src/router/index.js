@@ -207,6 +207,37 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/banner',
+    component: Layout,
+    redirect: '/banner/list',
+    name: 'Banner',
+    meta: {
+      title: 'banner图管理',
+      icon: 'documentation'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/banner/create'),
+        name: 'CreateArticle',
+        meta: { title: '新增banner', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id',
+        component: () => import('@/views/banner/edit'),
+        name: 'EditArticle',
+        meta: { title: '编辑banner', noCache: true, activeMenu: '/banner/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/banner/list'),
+        name: 'ArticleList',
+        meta: { title: 'banner列表', icon: 'list' }
+      }
+    ]
+  },
   /** 当路由图太长时，可以将其拆分为小模块。 **/
 
   // 404 page must be placed at the end !!!

@@ -4,7 +4,7 @@ const router = express.Router();
 const passport = require("passport");
 const Article = require("../../models/Article")
 const jwt_decode = require("jwt-decode");
-
+const multer = require("multer");
 //
 // $route GET api/article/test
 //  @desc 返回得请求得json数据
