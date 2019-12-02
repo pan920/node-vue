@@ -37,6 +37,13 @@ app.use("/api/users",users);
 app.use("/api/profiles", profiles);
 app.use("/api/article", article);
 app.use("/api/banner", banner);
+// 
+app.use(express.static('uploads'));
+app.get('/uploads/*', function (req, res) {
+    res.sendFile(__dirname + "/" + req.url);
+    console.log("img:" + req.url);
+})
+// 
 const port = process.env.PORT || 5000;
 app.listen(port,() => {
     console.log(`server running on port ${port}`)

@@ -122,9 +122,12 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 router.post('/upload', upload.any(), function(req, res, next) {
-    let file = req.file;
+    let file = req.files.path;
     console.log(req)
-    res.json({message: "ok"});
+    console.log(file)
+    res.json({
+        pic_url: req.files.path
+    });
 });
 
 module.exports = router;
