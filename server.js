@@ -37,11 +37,12 @@ app.use("/api/users",users);
 app.use("/api/profiles", profiles);
 app.use("/api/article", article);
 app.use("/api/banner", banner);
-// 
+
+// 访问图片文件夹
 app.use(express.static('uploads'));
 app.get('/uploads/*', function (req, res) {
     res.sendFile(__dirname + "/" + req.url);
-    console.log("img:" + req.url);
+    // console.log("img:" + req.url);
 })
 // 
 const port = process.env.PORT || 5000;
