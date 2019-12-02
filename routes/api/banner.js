@@ -110,21 +110,20 @@ router.get("/:id", passport.authenticate('jwt', {
 })
 
 // 图片上传接口
-var upload = multer({ dest: 'uploads/'}) // 文件储存路径
-// var storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'uploads/')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.fieldname + '-' + Date.now())
-//   }
-// })
-// var upload = multer({ storage: storage })
+// var upload = multer({ dest: 'uploads/'}) // 文件储存路径
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '.png')
+  }
+})
+var upload = multer({ storage: storage })
 
 router.post('/upload', upload.any(), function(req, res, next) {
     let file = req.file;
-    console.log(file)
-    console.log(res)
+    console.log(req)
     res.json({message: "ok"});
 });
 
