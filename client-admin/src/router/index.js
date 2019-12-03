@@ -182,7 +182,7 @@ export const asyncRoutes = [
     redirect: '/example/list',
     name: 'Example',
     meta: {
-      title: '文章模块',
+      title: '文章管理',
       icon: 'example'
     },
     children: [
@@ -220,20 +220,20 @@ export const asyncRoutes = [
       {
         path: 'create',
         component: () => import('@/views/banner/create'),
-        name: 'CreateArticle',
+        name: 'CreateBanner',
         meta: { title: '新增banner', icon: 'edit' }
       },
       {
         path: 'edit/:id',
         component: () => import('@/views/banner/edit'),
-        name: 'EditArticle',
+        name: 'EditBanner',
         meta: { title: '编辑banner', noCache: true, activeMenu: '/banner/list' },
         hidden: true
       },
       {
         path: 'list',
         component: () => import('@/views/banner/list'),
-        name: 'ArticleList',
+        name: 'BannerList',
         meta: { title: 'banner列表', icon: 'list' }
       }
     ]

@@ -7,10 +7,15 @@
           <el-col :span="24">
             <el-form-item label="banner图:" style="margin-bottom: 40px;">
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://localhost:9527/api/banner/upload"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove">
+                :on-remove="handleRemove"
+                :on-success="handImg"
+                :file-list="fileList"
+                :limit="1"
+                :on-exceed="handleExceed"
+                >
                 <i class="el-icon-plus"></i>
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
@@ -55,8 +60,8 @@
         </el-form-item>
       </div>
       <el-form-item style="margin-left:50px;">
-        <el-button v-if="isEdit" type="primary" @click="editArticle('postForm')">立即提交</el-button>
-        <el-button v-else type="primary" @click="addArticle('postForm')">立即提交</el-button>
+        <el-button v-if="isEdit" type="primary" @click="editBanner('postForm')">立即提交</el-button>
+        <el-button v-else type="primary" @click="addBanner('postForm')">立即提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -64,13 +69,13 @@
 
 <script>
 import Upload from '@/components/Upload/SingleImage3'
-import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
-import { addArticleApi, editArticleApi, detailArticleApi } from '@/api/article'
+import { addBannerApi, editBannerApi, detailBannerApi, uploadImgApi } from '@/api/banner'
 import { searchUser } from '@/api/remote-search'
 import Warning from './Warning'
 
 const defaultForm = {
+  file: '', // 图片路径
   describe: '', // 文章摘要
   image_uri: '', // 文章图片
   display_time: undefined, // 前台展示时间
@@ -84,7 +89,7 @@ const defaultForm = {
 
 export default {
   name: 'BannerDetail',
-  components: { Upload, Sticky, Warning },
+  components: { Upload, Warning },
   props: {
     isEdit: {
       type: Boolean,
@@ -114,7 +119,9 @@ export default {
       },
       tempRoute: {},
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+      base_url:'http://139.196.149.240:5000/', // 图片url前缀
+      fileList: []
     }
   },
   computed: {
@@ -150,17 +157,32 @@ export default {
   },
   methods: {
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
+      // console.log(file)
       this.dialogVisible = true;
     },
+    handImg(response, file, fileList) {
+      // console.log(response.pic_url)
+      this.postForm.file = response.pic_url
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件,请先删除原来图片！`);
+    },
     fetchData(id) {
-      detailArticleApi(id).then(response => {
+      detailBannerApi(id).then(response => {
         // console.log(response)
         this.postForm = response
-
+        this.postForm.is_top = true ? "0":"1"
+        var item = ''
+        item = {
+          name: response.type,
+          url: this.base_url+response.file
+        } 
+        this.fileList.push(item)
+        // console.log(this.postForm.is_top)
         // set tagsview title
         this.setTagsViewTitle()
 
@@ -172,28 +194,28 @@ export default {
     },
     setTagsViewTitle() {
       const title = '编辑banner'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.title}` })
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.type}` })
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     setPageTitle() {
       const title = '编辑banner'
-      document.title = `${title} - ${this.postForm.title}`
+      document.title = `${title} - ${this.postForm.type}`
     },
-    // 添加文章
-    addArticle() {
+    // 添加Banner
+    addBanner() {
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
-          addArticleApi(this.postForm).then((res) => {
+          addBannerApi(this.postForm).then((res) => {
                this.$notify({
                 title: '成功',
-                message: '发布文章成功',
+                message: '发布banner成功',
                 type: 'success',
                 duration: 2000
               })
               this.loading = false
               this.$router.push({ // 核心语句
-                path:'/example/list' // 跳转的路径
+                path:'/banner/list' // 跳转的路径
               })
           })
          
@@ -203,20 +225,20 @@ export default {
         }
       })
     },
-    editArticle() {
+    editBanner() {
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
-          editArticleApi(this.postForm).then((res) => {
+          editBannerApi(this.postForm).then((res) => {
                this.$notify({
                 title: '成功',
-                message: '更新文章成功',
+                message: '更新Banner成功',
                 type: 'success',
                 duration: 2000
               })
               this.loading = false
               this.$router.push({ // 核心语句
-                path:'/example/list' // 跳转的路径
+                path:'/banner/list' // 跳转的路径
               })
           })
          

@@ -5,15 +5,9 @@
       <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="searchList()">
         查询
       </el-button>
-      <el-button class="filter-item" size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addArticle()">
-        新增文章
+      <el-button class="filter-item" size="mini" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addBanner()">
+        新增Banner
       </el-button>
-      <el-button class="filter-item" type="primary" size="mini" icon="el-icon-view" @click="showWord()">
-        显示字段
-      </el-button>
-      <!-- <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download">
-        {{ $t('table.export') }}
-      </el-button> -->
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column
@@ -23,10 +17,10 @@
           width="70"
         />
 
-      <el-table-column min-width="80px" align="center" label="文章标题">
+      <el-table-column min-width="120px" align="center" label="banner图">
         <template slot-scope="scope">
           <router-link :to="'/banner/edit/'+scope.row._id" class="link-type">
-            <span>{{ scope.row.title }}</span>
+            <span><img style="width:100px;" :src="base_url+scope.row.file" /></span>
           </router-link>
         </template>
       </el-table-column>
@@ -48,7 +42,7 @@
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column width="100px" align="center" label="文章分类">
+      <el-table-column width="100px" align="center" label="banner分类">
         <template slot-scope="scope">
           <span>{{ scope.row.type }}</span>
         </template>
@@ -98,7 +92,7 @@
 </template>
 
 <script>
-import { articleListApi } from '@/api/article'
+import { bannerListApi } from '@/api/banner'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -123,7 +117,8 @@ export default {
       listQuery: {
         page_index: 1,
         page_size: 20
-      }
+      },
+      base_url:'http://139.196.149.240:5000/' // 图片url前缀
     }
   },
   created() {
@@ -132,19 +127,18 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      articleListApi(this.listQuery).then(res => {
+      bannerListApi(this.listQuery).then(res => {
         this.list = res.result.docs
         this.total = res.total_num
         this.listLoading = false
       })
     },
-    addArticle() {
+    addBanner() {
       this.$router.push({ // 核心语句
         path:'/banner/create' // 跳转的路径
       })
     },
-    searchList() {},
-    showWord() {}
+    searchList() {}
   }
 }
 </script>

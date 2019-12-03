@@ -107,21 +107,6 @@ export default {
         callback()
       }
     }
-    const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
-      } else {
-        callback()
-      }
-    }
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -129,8 +114,7 @@ export default {
       rules: {
         image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
+        content: [{ validator: validateRequire }]
       },
       tempRoute: {}
     }
@@ -171,7 +155,7 @@ export default {
       detailArticleApi(id).then(response => {
         // console.log(response)
         this.postForm = response
-
+        this.postForm.is_top = true ? "0":"1"
         // set tagsview title
         this.setTagsViewTitle()
 
