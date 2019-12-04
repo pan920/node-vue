@@ -11,6 +11,25 @@
               </MDinput>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item label="缩略图:" style="margin-bottom: 40px;">
+              <el-upload
+                action="http://localhost:9527/api/banner/upload"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :on-success="handImg"
+                :file-list="fileList"
+                :limit="1"
+                :on-exceed="handleExceed"
+                >
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
+            </el-form-item>
+          </el-col>
           <el-col :span="7">
             <el-form-item label="发布时间:" class="postInfo-container-item" prop="publish_time">
               <el-date-picker v-model="postForm.publish_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择时间" />
@@ -65,7 +84,6 @@
 import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage3'
 import MDinput from '@/components/MDinput'
-import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
 import { addArticleApi, editArticleApi, detailArticleApi } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
@@ -73,6 +91,7 @@ import Warning from './Warning'
 
 const defaultForm = {
   title: '', // 文章题目
+  file: '', // 文章缩略图
   content: '', // 文章内容
   describe: '', // 文章摘要
   source_uri: '', // 文章外链
@@ -88,7 +107,7 @@ const defaultForm = {
 
 export default {
   name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Upload, Sticky, Warning },
+  components: { Tinymce, MDinput, Upload, Warning },
   props: {
     isEdit: {
       type: Boolean,
@@ -116,7 +135,11 @@ export default {
         title: [{ validator: validateRequire }],
         content: [{ validator: validateRequire }]
       },
-      tempRoute: {}
+      tempRoute: {},
+      dialogImageUrl: '',
+      dialogVisible: false,
+      base_url:'http://139.196.149.240:5000/', // 图片url前缀
+      fileList: []
     }
   },
   computed: {
@@ -151,11 +174,32 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    handleRemove(file, fileList) {
+      // console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      // console.log(file)
+      this.dialogVisible = true;
+    },
+    handImg(response, file, fileList) {
+      // console.log(response.pic_url)
+      this.postForm.file = response.pic_url
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件,请先删除原来图片！`);
+    },
     fetchData(id) {
       detailArticleApi(id).then(response => {
         // console.log(response)
         this.postForm = response
         this.postForm.is_top = true ? "0":"1"
+        var item = ''
+        item = {
+          name: response.type,
+          url: this.base_url+response.file
+        } 
+        this.fileList.push(item)
         // set tagsview title
         this.setTagsViewTitle()
 

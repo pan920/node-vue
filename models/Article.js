@@ -11,6 +11,10 @@ const ArticleSchema = new Schema({
         type:String,
         required: true
     },
+    file: {
+        type: String,
+        required: true
+    },
     describe: {
         type: String
     },

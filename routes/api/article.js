@@ -20,6 +20,7 @@ router.post("/add",passport.authenticate('jwt',{session: false}),(req,res) => {
     const articleFields = {};
     if (req.body.type) articleFields.type = req.body.type;
     if (req.body.title) articleFields.title = req.body.title;
+    if (req.body.file) articleFields.file = req.body.file;
     if (req.body.describe) articleFields.describe = req.body.describe;
     if (req.body.content) articleFields.content = req.body.content;
     if (req.body.status) articleFields.status = req.body.status;
@@ -79,6 +80,7 @@ router.post("/edit/:id",passport.authenticate('jwt',{session: false}),(req,res) 
     const articleFields = {};
     if (req.body.type) articleFields.type = req.body.type;
     if (req.body.title) articleFields.title = req.body.title;
+    if (req.body.file) articleFields.file = req.body.file;
     if (req.body.describe) articleFields.describe = req.body.describe;
     if (req.body.content) articleFields.content = req.body.content;
     if (req.body.status) articleFields.status = req.body.status;
