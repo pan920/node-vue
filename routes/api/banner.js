@@ -123,8 +123,8 @@ var upload = multer({ storage: storage })
 
 router.post('/upload', upload.any(), function(req, res, next) {
     let file = req.files[0].path;
-    console.log(req)
-    console.log(file)
+    console.log(req.headers.host)
+    // console.log(file)
     res.json({
         pic_url: file
     });
