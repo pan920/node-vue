@@ -126,7 +126,7 @@ router.post('/upload', upload.any(), function(req, res, next) {
     console.log(req.headers.host)
     // console.log(file)
     res.json({
-        pic_url: file
+        pic_url: "http://"+req.headers.host+file
     });
 });
 
