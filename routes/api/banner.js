@@ -126,7 +126,8 @@ router.post('/upload', upload.any(), function(req, res, next) {
     console.log(req.headers.host)
     // console.log(file)
     res.json({
-        pic_url: "http://"+req.headers.host+file
+        // pic_url: "http://"+req.headers.host+'/'+file // 直接返回完整链接
+        pic_url: file
     });
 });
 
