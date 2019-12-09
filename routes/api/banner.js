@@ -4,7 +4,7 @@ const router = express.Router();
 const passport = require("passport");
 const Banner = require("../../models/Banner")
 const jwt_decode = require("jwt-decode");
-const multer = require("multer");
+const multer = require("multer"); // 保存图片
 //
 // $route GET api/article/test
 //  @desc 返回得请求得json数据
@@ -50,7 +50,8 @@ router.post("/list",passport.authenticate('jwt',{session:false}),(req,res) => {
 
                Banner.paginate(userId, {
                    page: req.query.page,
-                   limit: req.query.limit
+                   limit: req.query.limit,
+                   sort:{ status:0,is_top: -1 }
                },
                (error, result) => {
                    if (error) {

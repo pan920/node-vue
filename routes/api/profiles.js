@@ -65,7 +65,8 @@ router.get("/list",passport.authenticate('jwt',{session: false}),(req,res) => {
                 
                 Profiles.paginate(userId, {
                         page: req.query.page,
-                        limit: req.query.limit
+                        limit: req.query.limit,
+                        sort:{ status:0,is_top: -1 }
                     },
                     (error, result) => {
                         if (error) {
