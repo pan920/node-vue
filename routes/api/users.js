@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const app = express()
 const passport = require("passport");
+const jwt_decode = require("jwt-decode");
 
 const User = require("../../models/User")
 const Profiles = require("../../models/Profiles")
@@ -24,6 +25,7 @@ router.get("/test",(req,res) => {
 // 
 // $route POST api/users/regiter
 //  @desc 返回得请求得json数据
+// 注册
 router.post("/register",(req,res) => {
     // console.log('88')
    
@@ -58,7 +60,7 @@ router.post("/register",(req,res) => {
 
 // $route POST api/users/login
 //  @desc 返回token jwt passport
-// @access public
+// @access public 登陆
 router.post("/login",(req,res) =>{
     const email = req.body.email;
     // return res.send(email)
@@ -106,6 +108,44 @@ router.get("/current", passport.authenticate("jwt",{session:false}), (req, res) 
         email: req.user.email,
         identity: req.user.identity
     })
+})
+
+// 用户列表
+router.post("/user-list", passport.authenticate("jwt",{session:false}), (req, res) => {
+    const decoded = jwt_decode(req.headers.authorization)
+    User.find()
+        .then(user => {
+            if (!user) {
+                res.status(200).json("暂时没有用户！")
+            }
+            // 此处增加判断，将用户与数据对应，最高权限者可以查看所有数据
+            const userId = {}
+            if (decoded.identity != 'admin') {
+                res.status(400).json("无接口权限！")
+            }
+
+            User.paginate(userId, {
+                    page: req.query.page,
+                    limit: req.query.limit
+                },
+                (error, result) => {
+                    if (error) {
+                        res.end("列表接口报错！");
+                        return;
+                    }
+
+                    res.send({
+                        page_count: result.limit,
+                        page_num: result.page,
+                        total_num: result.total,
+                        result: result
+                    });
+                }
+            )
+        })
+        .catch(err => {
+            console.log(err)
+        })
 })
 
 // 数据统计模块

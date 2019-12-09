@@ -30,7 +30,11 @@
           </router-link>
         </template>
       </el-table-column>
-
+      <el-table-column min-width="120px" align="center" label="缩略图">
+        <template slot-scope="scope">
+          <span><img style="width:60px;" :src="base_url+scope.row.file" /></span>
+        </template>
+      </el-table-column>
       <el-table-column width="180px" align="center" label="添加时间">
         <template slot-scope="scope">
           <span>{{ scope.row.date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -123,7 +127,8 @@ export default {
       listQuery: {
         page_index: 1,
         page_size: 20
-      }
+      },
+      base_url:'http://139.196.149.240:5000/' // 图片url前缀
     }
   },
   created() {
