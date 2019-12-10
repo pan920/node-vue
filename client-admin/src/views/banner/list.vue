@@ -115,8 +115,8 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page_index: 1,
-        page_size: 20
+        page: 1,
+        limit: 10
       },
       base_url:'http://139.196.149.240:5000/' // 图片url前缀
     }

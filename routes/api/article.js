@@ -34,10 +34,10 @@ router.post("/add",passport.authenticate('jwt',{session: false}),(req,res) => {
     })
 })
 
-// $route POST api/article/list
+// $route GET api/article/list
 //  @desc 新闻列表接口
 //  @access Private 
-router.post("/list",passport.authenticate('jwt',{session:false}),(req,res) => {
+router.get("/list",passport.authenticate('jwt',{session:false}),(req,res) => {
     const decoded = jwt_decode(req.headers.authorization)
     Article.find()
            .then(article => {

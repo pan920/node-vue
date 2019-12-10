@@ -3,11 +3,12 @@
     <el-button type="primary" @click="handleAddRole">新增用户</el-button>
 
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="id" width="220">
-        <template slot-scope="scope">
-          {{ scope.row._id }}
-        </template>
-      </el-table-column>
+      <el-table-column
+          type="index"
+          label="序号"
+          align="center"
+          width="70"
+        />
       <el-table-column align="center" label="用户姓名" width="220">
         <template slot-scope="scope">
           {{ scope.row.name }}
@@ -30,21 +31,23 @@
         </template>
       </el-table-column>
     </el-table>
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getRoles" />
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑':'新增'">
+      <el-form ref="registerUser" :model="registerUser" :rules="rules" label-width="80px" label-position="left">
+        <el-form-item label="用户名" prop="name">
+          <el-input v-model="registerUser.name" placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="registerUser.email" placeholder="请输入邮箱" />
+        </el-form-item>
+        <el-form-item v-if="dialogType!='edit'" label="密码" prop="password">
+          <el-input v-model="registerUser.password" type="password" placeholder="请输入密码" />
+        </el-form-item>
+        <el-form-item v-if="dialogType!='edit'" label="确认密码" prop="password2">
+          <el-input v-model="registerUser.password2" type="password" placeholder="请确认密码" />
+        </el-form-item>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
-      <el-form :model="role" label-width="80px" label-position="left">
-        <el-form-item label="Name">
-          <el-input v-model="role.name" placeholder="Role Name" />
-        </el-form-item>
-        <el-form-item label="Desc">
-          <el-input
-            v-model="role.description"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            type="textarea"
-            placeholder="Role Description"
-          />
-        </el-form-item>
-        <el-form-item label="Menus">
+        <!-- <el-form-item label="Menus">
           <el-tree
             ref="tree"
             :check-strictly="checkStrictly"
@@ -54,12 +57,12 @@
             node-key="path"
             class="permission-tree"
           />
+        </el-form-item> -->
+        <el-form-item>
+            <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+            <el-button type="primary" @click="confirmRole('registerUser')">确定</el-button>
         </el-form-item>
       </el-form>
-      <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">Cancel</el-button>
-        <el-button type="primary" @click="confirmRole">Confirm</el-button>
-      </div>
     </el-dialog>
   </div>
 </template>
@@ -67,7 +70,9 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
+import { getRoutes, getRolesApi, addRole, deleteRole, updateRole } from '@/api/role'
+import { registerApi } from '@/api/user'
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 const defaultRole = {
   key: '',
@@ -76,10 +81,33 @@ const defaultRole = {
   routes: []
 }
 
+const registerUser = {
+  name: '',
+  email: '',
+  password: '',
+  password2: '',
+  identity: 'user'
+}
+
 export default {
+  components: { Pagination },
   data() {
+    // 验证密码是否一致
+    var validatePass2 = (rule, value, callback) => {
+      if (value !== this.registerUser.password) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
+      registerUser: Object.assign({}, registerUser),
       role: Object.assign({}, defaultRole),
+      listQuery: {
+        page: 1,
+        limit: 10
+      },
+      total: 0,
       routes: [],
       rolesList: [],
       dialogVisible: false,
@@ -88,6 +116,38 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'title'
+      },
+      rules: {
+        name: [
+          {
+            required: true,
+            message: '请输入用户名',
+            trigger: 'blur'
+          },
+          {
+            max: 20,
+            message: '用户名长度过长！',
+            trigger: 'blur'
+          }
+        ],
+        email: [{ type: 'email', required: true, message: '请输入邮箱', trigger: 'blur' }],
+        password: [
+          {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+          },
+          {
+            min: 6,
+            max: 30,
+            message: '长度在6到30之间',
+            trigger: 'blur'
+          }
+        ],
+        password2: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { validator: validatePass2, trigger: 'blur' }
+        ]
       }
     }
   },
@@ -98,7 +158,7 @@ export default {
   },
   created() {
     // Mock: get all routes and roles list from server
-    this.getRoutes()
+    // this.getRoutes()
     this.getRoles()
   },
   methods: {
@@ -108,8 +168,9 @@ export default {
       this.routes = this.generateRoutes(res.data)
     },
     async getRoles() {
-      const res = await getRoles()
-      this.rolesList = res.data
+      const res = await getRolesApi(this.listQuery)
+      this.rolesList = res.result.docs
+      this.total = res.total_num
     },
 
     // Reshape the routes structure so that it looks the same as the sidebar
@@ -154,7 +215,7 @@ export default {
       return data
     },
     handleAddRole() {
-      this.role = Object.assign({}, defaultRole)
+      this.registerUser = Object.assign({}, registerUser)
       if (this.$refs.tree) {
         this.$refs.tree.setCheckedNodes([])
       }
@@ -165,18 +226,18 @@ export default {
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.checkStrictly = true
-      this.role = deepClone(scope.row)
-      this.$nextTick(() => {
-        const routes = this.generateRoutes(this.role.routes)
-        this.$refs.tree.setCheckedNodes(this.generateArr(routes))
-        // set checked state of a node not affects its father and child nodes
-        this.checkStrictly = false
-      })
+      this.registerUser = deepClone(scope.row)
+      // this.$nextTick(() => {
+      //   const routes = this.generateRoutes(this.role.routes)
+      //   this.$refs.tree.setCheckedNodes(this.generateArr(routes))
+      //   // set checked state of a node not affects its father and child nodes
+      //   this.checkStrictly = false
+      // })
     },
     handleDelete({ $index, row }) {
-      this.$confirm('Confirm to remove the role?', 'Warning', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
+      this.$confirm('确定删除此用户嘛?', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async() => {
@@ -184,7 +245,7 @@ export default {
           this.rolesList.splice($index, 1)
           this.$message({
             type: 'success',
-            message: 'Delete succed!'
+            message: '删除成功!'
           })
         })
         .catch(err => { console.error(err) })
@@ -206,38 +267,44 @@ export default {
       }
       return res
     },
-    async confirmRole() {
+    confirmRole(formName) {
       const isEdit = this.dialogType === 'edit'
 
-      const checkedKeys = this.$refs.tree.getCheckedKeys()
-      this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
+      // const checkedKeys = this.$refs.tree.getCheckedKeys()
+      // this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
+      // 0
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+            if (isEdit) {
+              updateRole(this.role._id)
+              // for (let index = 0; index < this.rolesList.length; index++) {
+              //   if (this.rolesList[index].key === this.role.key) {
+              //     this.rolesList.splice(index, 1, Object.assign({}, this.role))
+              //     break
+              //   }
+              // }
+            } else {
+              const { data } = registerApi(this.registerUser)
+              // this.role._id = data._id
+              // this.rolesList.push(this.role)
+              this.getRoles()
+            }
 
-      if (isEdit) {
-        await updateRole(this.role.key, this.role)
-        for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].key === this.role.key) {
-            this.rolesList.splice(index, 1, Object.assign({}, this.role))
-            break
-          }
-        }
-      } else {
-        const { data } = await addRole(this.role)
-        this.role.key = data.key
-        this.rolesList.push(this.role)
-      }
-
-      const { description, key, name } = this.role
-      this.dialogVisible = false
-      this.$notify({
-        title: 'Success',
-        dangerouslyUseHTMLString: true,
-        message: `
-            <div>Role Key: ${key}</div>
-            <div>Role Nmae: ${name}</div>
-            <div>Description: ${description}</div>
-          `,
-        type: 'success'
-      })
+            const { email, name } = this.registerUser
+            this.dialogVisible = false
+            this.$notify({
+              title: 'Success',
+              dangerouslyUseHTMLString: true,
+              message: `
+                  <div>用户email: ${email}</div>
+                  <div>用户名: ${name}</div>
+                `,
+              type: 'success'
+            })
+              }
+            })
+      // 0
+      
     },
     // reference: src/view/layout/components/Sidebar/SidebarItem.vue
     onlyOneShowingChild(children = [], parent) {

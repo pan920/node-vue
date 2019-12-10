@@ -32,10 +32,10 @@ router.post("/add",passport.authenticate('jwt',{session: false}),(req,res) => {
     })
 })
 
-// $route POST api/banner/list
+// $route get api/banner/list
 //  @desc banner列表接口
 //  @access Private 
-router.post("/list",passport.authenticate('jwt',{session:false}),(req,res) => {
+router.get("/list",passport.authenticate('jwt',{session:false}),(req,res) => {
     const decoded = jwt_decode(req.headers.authorization)
     Banner.find()
            .then(banner => {

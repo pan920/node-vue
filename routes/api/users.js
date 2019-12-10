@@ -110,8 +110,22 @@ router.get("/current", passport.authenticate("jwt",{session:false}), (req, res) 
     })
 })
 
-// 用户列表
-router.post("/user-list", passport.authenticate("jwt",{session:false}), (req, res) => {
+// $route POST api/users/edit
+//  @desc 用户资料修改
+// @access Private
+router.get("/edit/:id", passport.authenticate("jwt",{session:false}), (req, res) => {
+    User.findOne({
+            _id: req.params.id
+        })
+        .then(user => {
+
+        })
+})
+
+// $route GET api/users/user-list
+//  @desc 用户列表
+// @access Private
+router.get("/user-list", passport.authenticate("jwt",{session:false}), (req, res) => {
     const decoded = jwt_decode(req.headers.authorization)
     User.find()
         .then(user => {

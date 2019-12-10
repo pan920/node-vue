@@ -4,8 +4,8 @@ import request from '@/utils/request'
 export function articleListApi(data) {
   return request({
     url: '/article/list',
-    method: 'post',
-    data
+    method: 'get',
+    params: { data }
   })
 }
 

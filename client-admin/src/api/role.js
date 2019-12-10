@@ -7,10 +7,11 @@ export function getRoutes() {
   })
 }
 
-export function getRoles() {
+export function getRolesApi(data) {
   return request({
-    url: '/roles',
-    method: 'get'
+    url: '/users/user-list',
+    method: 'get',
+    params: { data }
   })
 }
 
