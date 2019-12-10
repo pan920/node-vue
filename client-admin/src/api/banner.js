@@ -4,8 +4,8 @@ import request from '@/utils/request'
 export function bannerListApi(data) {
   return request({
     url: '/banner/list',
-    method: 'post',
-    data
+    method: 'get',
+    params: data
   })
 }
 

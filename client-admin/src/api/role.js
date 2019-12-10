@@ -11,7 +11,7 @@ export function getRolesApi(data) {
   return request({
     url: '/users/user-list',
     method: 'get',
-    params: { data }
+    params: data
   })
 }
 
@@ -23,10 +23,10 @@ export function addRole(data) {
   })
 }
 
-export function updateRole(id, data) {
+export function updateRoleApi(id, data) {
   return request({
-    url: `/role/${id}`,
-    method: 'put',
+    url: `/users/edit/${id}`,
+    method: 'post',
     data
   })
 }

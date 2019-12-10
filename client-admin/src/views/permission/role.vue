@@ -70,7 +70,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRolesApi, addRole, deleteRole, updateRole } from '@/api/role'
+import { getRoutes, getRolesApi, deleteRole, updateRoleApi } from '@/api/role'
 import { registerApi } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -276,7 +276,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
             if (isEdit) {
-              updateRole(this.role._id)
+
+              updateRoleApi(this.role._id,this.role)
               // for (let index = 0; index < this.rolesList.length; index++) {
               //   if (this.rolesList[index].key === this.role.key) {
               //     this.rolesList.splice(index, 1, Object.assign({}, this.role))

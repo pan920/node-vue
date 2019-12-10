@@ -113,13 +113,14 @@ router.get("/current", passport.authenticate("jwt",{session:false}), (req, res) 
 // $route POST api/users/edit
 //  @desc 用户资料修改
 // @access Private
-router.get("/edit/:id", passport.authenticate("jwt",{session:false}), (req, res) => {
-    User.findOne({
-            _id: req.params.id
-        })
-        .then(user => {
-
-        })
+router.post("/edit/:id", passport.authenticate("jwt",{session:false}), (req, res) => {
+    const userFields = {};
+    if (req.body.name) userFields.name = req.body.name;
+    if (req.body.email) userFields.email = req.body.email;
+    User.findOneAndUpdate({_id: req.params.id},{$set:userFields})
+            .then(user => {
+                res.json('更新成功！')
+            })
 })
 
 // $route GET api/users/user-list

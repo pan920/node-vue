@@ -5,7 +5,7 @@ export function articleListApi(data) {
   return request({
     url: '/article/list',
     method: 'get',
-    params: { data }
+    params: data
   })
 }
 
