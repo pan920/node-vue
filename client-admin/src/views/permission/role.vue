@@ -75,7 +75,7 @@ import { registerApi } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 const defaultRole = {
-  key: '',
+  _id: '',
   name: '',
   description: '',
   routes: []
@@ -235,12 +235,13 @@ export default {
       // })
     },
     handleDelete({ $index, row }) {
-      this.$confirm('确定删除此用户嘛?', 'Warning', {
+      this.$confirm('确定删除此用户嘛?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async() => {
+          return
           await deleteRole(row.key)
           this.rolesList.splice($index, 1)
           this.$message({
@@ -277,7 +278,7 @@ export default {
         if (valid) {
             if (isEdit) {
 
-              updateRoleApi(this.role._id,this.role)
+              updateRoleApi(this.registerUser._id,this.registerUser)
               // for (let index = 0; index < this.rolesList.length; index++) {
               //   if (this.rolesList[index].key === this.role.key) {
               //     this.rolesList.splice(index, 1, Object.assign({}, this.role))
