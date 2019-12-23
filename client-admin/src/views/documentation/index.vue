@@ -8,7 +8,7 @@
     <a
       class="document-btn"
       target="_blank"
-      href="https://github.com/PanJiaChen/vue-element-admin/"
+      href="https://github.com/pan920/node-vue/"
     >Github Repository</a>
     <a
       class="document-btn"
