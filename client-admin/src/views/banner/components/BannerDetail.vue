@@ -6,8 +6,20 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="banner图:" style="margin-bottom: 40px;">
-              <el-upload
+              <!-- 测试 -->
+              <!-- <el-upload
                 action="http://localhost:9527/api/banner/upload"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :on-success="handImg"
+                :file-list="fileList"
+                :limit="1"
+                :on-exceed="handleExceed"
+                > -->
+                <!-- 线上 -->
+              <el-upload
+                action="http://139.196.149.240/api/banner/upload"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
@@ -100,10 +112,12 @@ export default {
     const validateRequire = (rule, value, callback) => {
       if (value === '') {
         this.$message({
-          message: rule.field + '为必传项',
+          // message: rule.field + '为必传项',
+           message: '必传项不能为空！',
           type: 'error'
         })
-        callback(new Error(rule.field + '为必传项'))
+        // callback(new Error(rule.field + '为必传项'))
+        callback(new Error('必传项不能为空！'))
       } else {
         callback()
       }
@@ -115,7 +129,10 @@ export default {
       rules: {
         image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }]
+        content: [{ validator: validateRequire }],
+        publish_time: [{ validator: validateRequire }],
+        type: [{ validator: validateRequire }],
+        status: [{ validator: validateRequire }]
       },
       tempRoute: {},
       dialogImageUrl: '',
@@ -203,6 +220,13 @@ export default {
     },
     // 添加Banner
     addBanner() {
+      if(this.postForm.file == ''){
+        this.$message({
+          message: '请上传图片',
+          type: 'error'
+        })
+        return
+      }
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -226,6 +250,13 @@ export default {
       })
     },
     editBanner() {
+      if(this.postForm.file == ''){
+        this.$message({
+          message: '请上传图片',
+          type: 'error'
+        })
+        return
+      }
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true

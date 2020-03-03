@@ -24,6 +24,11 @@
           {{ scope.row.identity }}
         </template>
       </el-table-column>
+      <el-table-column align="header-center" label="注册时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope)">编辑</el-button>

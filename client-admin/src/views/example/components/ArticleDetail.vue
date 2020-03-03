@@ -13,8 +13,20 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="缩略图:" style="margin-bottom: 40px;">
-              <el-upload
+              <!-- 测试 -->
+              <!-- <el-upload
                 action="http://localhost:9527/api/banner/upload"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :on-success="handImg"
+                :file-list="fileList"
+                :limit="1"
+                :on-exceed="handleExceed"
+                > -->
+                <!-- 线上 -->
+                <el-upload
+                action="http://139.196.149.240/api/banner/upload"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
@@ -32,12 +44,12 @@
           </el-col>
           <el-col :span="7">
             <el-form-item label="发布时间:" class="postInfo-container-item" prop="publish_time">
-              <el-date-picker v-model="postForm.publish_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择时间" />
+              <el-date-picker v-model="postForm.publish_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择时间" required />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label-width="80px" label="审核状态:" class="postInfo-container-item" prop="status">
-              <el-select v-model="postForm.status" placeholder="请选择审核状态">
+              <el-select v-model="postForm.status" placeholder="请选择审核状态" required>
                   <el-option label="未审核" value="0"></el-option>
                   <el-option label="已审核" value="1"></el-option>
                   <el-option label="未通过" value="2"></el-option>
@@ -46,7 +58,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label-width="80px" label="文章分类:" class="postInfo-container-item" prop="type">
-              <el-select v-model="postForm.type" placeholder="请选择文章分类">
+              <el-select v-model="postForm.type" placeholder="请选择文章分类" required>
                   <el-option label="vue" value="vue"></el-option>
                   <el-option label="node" value="node"></el-option>
                   <el-option label="mongose" value="mongose"></el-option>
@@ -55,7 +67,7 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label-width="80px" label="是否置顶:" class="postInfo-container-item" prop="is_top">
-              <el-select v-model="postForm.is_top" placeholder="是否置顶">
+              <el-select v-model="postForm.is_top" placeholder="是否置顶" required>
                   <el-option label="是" value="1"></el-option>
                   <el-option label="否" value="0"></el-option>
               </el-select>
@@ -63,8 +75,8 @@
           </el-col>
         </el-row>
         
-        <el-form-item style="margin-bottom: 40px;" label-width="70px" label="描述:">
-          <el-input v-model="postForm.describe" :rows="1" type="textarea" class="article-textarea" autosize placeholder="描述" />
+        <el-form-item style="margin-bottom: 40px;" prop="describe" label-width="70px" label="描述:">
+          <el-input v-model="postForm.describe" :rows="1" type="textarea" class="article-textarea" autosize placeholder="描述" required />
           <!-- <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span> -->
         </el-form-item>
 
@@ -118,10 +130,12 @@ export default {
     const validateRequire = (rule, value, callback) => {
       if (value === '') {
         this.$message({
-          message: rule.field + '为必传项',
+          // message: rule.field + '为必传项',
+           message: '必传项不能为空！',
           type: 'error'
         })
-        callback(new Error(rule.field + '为必传项'))
+        // callback(new Error(rule.field + '为必传项'))
+        callback(new Error('必传项不能为空！'))
       } else {
         callback()
       }
@@ -133,7 +147,11 @@ export default {
       rules: {
         image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }]
+        content: [{ validator: validateRequire }],
+        describe: [{ validator: validateRequire }],
+        type: [{ validator: validateRequire }],
+        status: [{ validator: validateRequire }],
+        publish_time: [{ validator: validateRequire }]
       },
       tempRoute: {},
       dialogImageUrl: '',
@@ -160,6 +178,7 @@ export default {
     }
   },
   created() {
+    // 判断是编辑还是新增
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       // console.log(id)
@@ -220,6 +239,13 @@ export default {
     },
     // 添加文章
     addArticle() {
+      if(this.postForm.file == ''){
+        this.$message({
+          message: '请上传图片',
+          type: 'error'
+        })
+        return
+      }
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -242,7 +268,15 @@ export default {
         }
       })
     },
+    // 编辑文章
     editArticle() {
+      if(this.postForm.file == ''){
+        this.$message({
+          message: '请上传图片',
+          type: 'error'
+        })
+        return
+      }
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
